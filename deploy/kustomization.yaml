@@ -5,5 +5,4 @@ resources:
 images:
 - name: cryptoclub-chatbot
   newName: docker.io/mwthink/cryptoclubtx-chatbot
-  newTag: main
-
+  newTag: latest

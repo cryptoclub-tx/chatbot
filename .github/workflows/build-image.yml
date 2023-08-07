@@ -18,17 +18,28 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     
+    # Multiarch info from https://dev.to/cloudx/multi-arch-docker-images-the-easy-way-with-github-actions-4k54
+    # https://github.com/docker/setup-qemu-action
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    # https://github.com/docker/setup-buildx-action
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+    
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build, tag, and push container image
+    
+    - name: Build and push
+      uses: docker/build-push-action@v4
       env:
         IMAGE_REPO: docker.io/mwthink/cryptoclubtx-chatbot
         IMAGE_TAG: ${{ github.sha }}
-      run: |
-        docker build -t $IMAGE_REPO:$IMAGE_TAG -t $IMAGE_REPO:latest .
-        docker push $IMAGE_REPO:$IMAGE_TAG
-        docker push $IMAGE_REPO:latest
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm/v7
+        push: true
+        tags: latest ${{ github.sha }}
