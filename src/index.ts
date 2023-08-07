@@ -62,3 +62,14 @@ client.on('interactionCreate', async interaction => {
 
 // Start the Discord client
 client.login(config.discord.token);
+
+// Handle graceful shutdown
+const shutdown = async () => {
+  console.log('Application is shutting down');
+  await client.destroy()
+}
+
+['SIGINT', 'SIGTERM'].forEach(sig => process.on(sig, () => {
+  console.log(`Got signal ${sig}`);
+  return shutdown();
+}))
