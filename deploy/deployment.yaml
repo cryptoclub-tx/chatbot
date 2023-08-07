@@ -21,7 +21,10 @@ spec:
       containers:
       - name: cryptoclub-chatbot
         image: cryptoclub-chatbot
+        imagePullPolicy: Always
         env:
+        - name: METRICS_ENABLE_DEFAULT
+          value: "yes"
         - name: DISCORD_APPLICATION_ID
           valueFrom:
             secretKeyRef:
@@ -44,4 +47,14 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         
-        ports: []
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        
+        readinessProbe:
+          httpGet:
+            port: http
+            path: /healthz
+          initialDelaySeconds: 5
+          periodSeconds: 10
