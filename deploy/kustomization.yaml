@@ -3,6 +3,6 @@ resources:
 
 images:
 - name: cryptoclub-chatbot
-  newName: cryptoclub-chatbot # TODO set to remote repo
-  newTag: latest
+  newName: docker.io/mwthink/cryptoclubtx-chatbot
+  newTag: main
 

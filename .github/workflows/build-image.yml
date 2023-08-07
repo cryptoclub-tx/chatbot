@@ -29,5 +29,6 @@ jobs:
         IMAGE_REPO: docker.io/mwthink/cryptoclubtx-chatbot
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $IMAGE_REPO:$IMAGE_TAG .
+        docker build -t $IMAGE_REPO:$IMAGE_TAG -t $IMAGE_REPO:latest .
         docker push $IMAGE_REPO:$IMAGE_TAG
+        docker push $IMAGE_REPO:latest
