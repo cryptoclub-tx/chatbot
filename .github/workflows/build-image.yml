@@ -35,11 +35,8 @@ jobs:
     
     - name: Build and push
       uses: docker/build-push-action@v4
-      env:
-        IMAGE_REPO: docker.io/mwthink/cryptoclubtx-chatbot
-        IMAGE_TAG: ${{ github.sha }}
       with:
         context: .
         platforms: linux/amd64,linux/arm/v7,linux/arm64
         push: true
-        tags: latest,${{ github.sha }}
+        tags: docker.io/mwthink/cryptoclubtx-chatbot:latest,docker.io/mwthink/cryptoclubtx-chatbot:${{ github.sha }}
