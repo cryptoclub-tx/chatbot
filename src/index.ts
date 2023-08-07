@@ -1,22 +1,8 @@
-import { Client, ApplicationCommandOptionType } from 'discord.js';
+import { Client } from 'discord.js';
 import { REST } from 'discord.js';
 import { discordRegisterCommands } from './lib';
 import config from './config';
-
-const commands = [
-  {
-    name: 'cryptoprice',
-    description: 'Fetches USD price of asset from CoinGecko',
-    options: [
-      {
-        type: ApplicationCommandOptionType.String,
-        name: 'asset',
-        description: 'Unique name of asset listed on CoinGecko',
-        required: true
-      },
-    ]
-  },
-]
+import commands from './commands';
 
 // Create Discord REST client
 const discordRest = new REST({
@@ -39,25 +25,8 @@ client.on('ready', async () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  if(interaction.commandName === 'ping'){
-    await interaction.reply('pong');
-  }
-  if(interaction.commandName === 'cryptoprice'){
-    const assetName = (interaction.options.getString('asset') || '').toLowerCase();
-    const quoteCurrency = 'usd';
-    const currencySymbol = '$';
-    return fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${assetName}&vs_currencies=${quoteCurrency}`)
-      .then( async resp => {
-        const priceData = await resp.json();
-        const pricePer = priceData[assetName][quoteCurrency];
-        await interaction.reply(`1 ${assetName} = ${currencySymbol}${pricePer}`);
-      })
-      .catch(async err => {
-        console.error(err);
-        await interaction.reply('An unexpected error has occurred. Please try agian later.')
-      })
-  }
-
+  const interactionCommand = commands.find(c => c.name === interaction.commandName);
+  interactionCommand.handler(interaction);
 })
 
 // Start the Discord client
