@@ -24,7 +24,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build, tag, and push(*) container image
+    - name: Build, tag, and push container image
       env:
         IMAGE_REPO: docker.io/mwthink/cryptoclubtx-chatbot
         IMAGE_TAG: ${{ github.sha }}
