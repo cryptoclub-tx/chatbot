@@ -1,6 +1,9 @@
-import { ApplicationCommandOptionType, ChatInputCommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, ChatInputCommandInteraction, ApplicationCommandData } from 'discord.js';
 
-export const commands = [
+export type ChatInputCommandInteractionHandler = (interaction: ChatInputCommandInteraction) => Promise<void>;
+export type AppCommandDefinition = ( ApplicationCommandData & { handler: ChatInputCommandInteractionHandler } );
+
+export const commands: AppCommandDefinition[] = [
   {
     name: 'cryptoprice',
     description: 'Fetches USD price of asset from CoinGecko',
@@ -12,11 +15,11 @@ export const commands = [
         required: true,
       },
     ],
-    handler: (interaction: ChatInputCommandInteraction) => {
+    handler: async (interaction: ChatInputCommandInteraction) => {
       const assetName = (interaction.options.getString('asset') || '').toLowerCase();
       const quoteCurrency = 'usd';
       const currencySymbol = '$';
-      return fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${assetName}&vs_currencies=${quoteCurrency}`)
+      await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${assetName}&vs_currencies=${quoteCurrency}`)
         .then( async resp => {
           const priceData = await resp.json();
           const pricePer = priceData[assetName][quoteCurrency];
