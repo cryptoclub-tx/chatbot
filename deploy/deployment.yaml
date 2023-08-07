@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cryptoclub-chatbot
+  labels:
+    app: cryptoclub-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cryptoclub-chatbot
+  template:
+    metadata:
+      labels:
+        app: cryptoclub-chatbot
+    spec:
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+      containers:
+      - name: cryptoclub-chatbot
+        image: cryptoclub-chatbot
+        env:
+        - name: DISCORD_APPLICATION_ID
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-credentials
+              key: application_id
+        - name: DISCORD_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-credentials
+              key: public_key
+              optional: true
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-credentials
+              key: token
+        
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        
+        ports: []

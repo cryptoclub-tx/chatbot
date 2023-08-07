@@ -1,0 +1,8 @@
+resources:
+- deployment.yaml
+
+images:
+- name: cryptoclub-chatbot
+  newName: cryptoclub-chatbot # TODO set to remote repo
+  newTag: latest
+
